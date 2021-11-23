@@ -110,30 +110,20 @@ const trade = async (recieveAmount, action, orca, connection) => {
 
   if (action == "buy") {
     const pool = await orca.getPool(OrcaPoolConfig.LIQ_USDC);
-    const giveToken = pool.getTokenA();
-    const recieveToken = pool.getTokenB();
+    const giveToken = pool.getTokenB();
+    const recieveToken = pool.getTokenA();
     const tokenInfo = await connection.getParsedTokenAccountsByOwner(owner.publicKey, {mint: giveToken.mint}, {encoding: "jsonParsed"})
     const tokenAmount = await tokenInfo.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-    if(tokenAmount < 1) {
-      // Main swap action to convert USDC to ORCA
-      const price = await swap(recieveAmount, false, false, pool, connection)
-      return price;
-    } else {
-      console.log(giveToken.name + " is already owned.")
-    }
+    const price = await swap(recieveAmount, false, false, pool, connection)
+    return price;
   } else if (action == "sell") {
     const pool = await orca.getPool(OrcaPoolConfig.LIQ_USDC);
     const giveToken = pool.getTokenA();
     const recieveToken = pool.getTokenB();
     const tokenInfo = await connection.getParsedTokenAccountsByOwner(owner.publicKey, {mint: recieveToken.mint}, {encoding: "jsonParsed"})
     const tokenAmount = await tokenInfo.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-    if(tokenAmount < 1) {
-      // Main swap action to convert ORCA to USDC
-      const price = await swap(recieveAmount, true, false, pool, connection)
-      return price;
-    } else {
-      console.log(recieveToken.name + " is already owned.")
-    }
+    const price = await swap(recieveAmount, true, false, pool, connection)
+    return price;
   } else {
      console.log("The action " + action + " does not exist.")
   }

@@ -9,7 +9,7 @@ import fs from "fs";
 
 // The get data function from CMC
 const getData = async(id) => {
-  const res = await fetch("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/historical?id=" + String(id) + "&convertId=2781&timeStart=1199175151&timeEnd=" + String(Date.now()) + "&interval=hourly")
+  const res = await fetch("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/historical?id=" + String(id) + "&convertId=2781&timeStart=1199175151&timeEnd=" + String(Date.now()) + "&interval=hourly", {cache: "no-cache"})
   var data = await res.json()
   data = data["data"]["quotes"]
 

@@ -6,10 +6,14 @@ import _ from "lodash";
 import fetch from "node-fetch";
 import {quantileRank} from "simple-statistics";
 import fs from "fs";
+import https from "https";
 
 // The get data function from CMC
 const getData = async(id) => {
-  const res = await fetch("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/historical?id=" + String(id) + "&convertId=2781&timeStart=1199175151&timeEnd=" + String(Date.now()) + "&interval=hourly", {cache: "no-cache"})
+  const httpsAgent = new https.Agent({
+    keepAlive: true
+  });
+  const res = await fetch("https://api.coinmarketcap.com/data-api/v3/cryptocurrency/historical?id=" + String(id) + "&convertId=2781&timeStart=1199175151&timeEnd=" + String(Date.now()) + "&interval=hourly", {cache: "no-cache", agent: httpsAgent})
   var data = await res.json()
   data = data["data"]["quotes"]
 
@@ -179,7 +183,7 @@ const main = async (orca, connection) => {
         await actions.push({"date": new Date(), "action": "sell", "return": ((price/lastBuyPrice) - 1) - fee, "price": price, "quaintile": currentQuantile});
         await writeActionsFile(actions);
       } else {
-        console.log("Buy price with fees of " + String((lastBuyPrice * (1 + fee))) + " is not greater than current price of " + String(price))
+        console.log("Buy price with fees of " + String((lastBuyPrice * (1 + fee))) + " is not greater than current price of " + String(quotePrice))
       }
     }
   } else if (Number(btokenAmount) > 1) {
@@ -223,6 +227,6 @@ while(true) {
     console.table(actions);
   }
 
-  await sleep(1*60*1000)
+  await sleep(5*60*1000)
 
 }

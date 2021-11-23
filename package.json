@@ -1,0 +1,19 @@
+{
+  "name": "orcatrader",
+  "version": "0.0.1",
+  "description": "Trading bot for Solona on Orca",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@orca-so/sdk": "^1.1.9",
+    "@solana/web3.js": "^1.30.0",
+    "bs58": "^4.0.1",
+    "decimal": "0.0.2",
+    "simple-statistics": "^7.7.0"
+  }
+}
